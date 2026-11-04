@@ -64,9 +64,63 @@ class Stack {
 
 const stack = new Stack()
 
-$(document).ready(function(){
-    $("#stack").prepend(`<div class="row bg-primary push">${stack.push(100)[0]}</div>`);
-    $("#stack").prepend(`<div class="row bg-success push">${stack.push(200)[0]}</div>`);
-    $("#stack").prepend(`<div class="row bg-primary push">${stack.push(300)[0]}</div>`);
-    $("#stack").prepend(`<div class="row bg-success push">${stack.push(400)[0]}</div>`);
+$(document).ready(function () {
+
+    const input = $("input");
+    const stackDisplay = $("#stack");
+    const deletedDisplay = $(".popped");
+
+    function updateStack() {
+        stackDisplay.empty();
+
+        for (let i = stack.count - 1; i >= 0; i--) {
+            stackDisplay.append(
+                `<div class="row bg-primary text-white p-2 m-1">${stack.items[i]}</div>`
+            );
+        }
+    }
+
+    $("button").eq(0).click(function () {
+        let value = input.val().trim();
+
+        if (value === "") {
+            alert("Please enter a value.");
+            return;
+        }
+
+        stack.push(value);
+        input.val("");
+        updateStack();
+    });
+
+    $("button").eq(1).click(function () {
+        let removed = stack.pop();
+
+        if (removed === undefined) {
+            alert("Stack is empty.");
+            return;
+        }
+
+        deletedDisplay.text(removed);
+        updateStack();
+    });
+
+    $("button").eq(2).click(function () {
+        let top = stack.peek();
+
+        if (top === undefined) {
+            alert("Stack is empty.");
+            return;
+        }
+
+        updateStack();
+        stackDisplay.children().first().addClass("border border-warning border-4");
+    });
+
+    $("button").eq(3).click(function () {
+        stack.clear();
+        deletedDisplay.empty();
+        updateStack();
+    });
+
 });
